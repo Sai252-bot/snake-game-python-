@@ -1,0 +1,76 @@
+# snake game
+import random   #import module random
+
+width = 10        # width=10
+height = 10       # height=10
+def print_board(snake, food):  # take function function name with parameters snake and food
+  for y in range(height):     # take for loop to can iterate  height in y one by one
+    for x in range(width):    # take another for loop to can iterate width in x one by one
+        if [x, y]== food:      # if the parametrs of functions are equal to food execute the if block if not equal to food move elif block
+          print("🍖", end=" ")
+        elif [x, y] in snake:   # elif block parametrs x,y are in snake the excute elif condition false move to else block
+          print("🐍", end=" ")
+        else:                  # will not excute both if and elif we can execute the else block by default
+          print(".", end=" ")
+    print()
+  print()
+
+def move_snake(snake, direction):
+  head = snake[-1]
+  if direction == "up":               # The snake direction move up
+    new_head=[head[0] , head[1] - 1]
+  elif direction == "down":           # The snake direction move down
+    new_head=[head[0] , head[1] + 1]
+  elif direction == "left":           # The snake direction move left
+    new_head=[head[0] - 1,head[1]]
+  elif direction == "right":          # The snake direction move right
+    new_head=[head[0] + 1,head[1]]
+  else:
+    print("Invalid direction! Use up/down/left/right:")
+    return snake, False
+
+#wall collide conditions
+  if new_head[0] < 0 or new_head[0] >= width or new_head[1] < 0 or new_head[1] >= height:
+      return snake,"wall"
+#self collide conditions
+  if new_head in snake:
+      return snake,"self"
+# If no collision, append the new head
+
+  snake.append(new_head)
+  return snake,new_head         # Return new_head when move is successful
+
+def place_food(snake):
+  while True:
+      x = random.randint(0, width - 1)
+      y = random.randint(0, height - 1)
+      if [x, y] not in snake:
+        return [x, y]
+
+def snake_game():
+    snake = [[5, 5]]
+    food = place_food(snake)
+    score = 0
+
+    while True:
+      print_board(snake, food)
+      print("score:",score)
+      direction=input('Enter direction(up/down/left/right):')
+
+      snake,result=move_snake(snake,direction)
+
+      if result == "wall":
+        print("You hit the wall,Game over!!!")
+        break
+      elif result == "self":
+        print("You hit yourself.....Game over")
+        break
+      elif result == food:
+        score += 1
+        food = place_food(snake)
+      else: # Only remove tail if snake moved and didn't eat food
+        snake.pop(0)
+
+    print("Final Score:",score)
+
+snake_game()
